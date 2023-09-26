@@ -1,9 +1,10 @@
-FILENAME   = blink
-PORT       = /dev/cu.usbserial-DN05NYGQ
-DEVICE     = atmega328p
+FILENAME = blink
+PORT = /dev/cu.usbmodem1101
+DEVICE = atmega328p
 PROGRAMMER = arduino
-BAUD       = 57600
-COMPILE    = avr-gcc -Wall -Os -mmcu=$(DEVICE)
+BAUD = 115200
+AVRDUDE_CONF = /Users/andrewcaravaggio/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf
+COMPILE = avr-gcc -Wall -Os -DF_CPU=16000000UL -mmcu=$(DEVICE)
 
 
 default: compile upload clean serial
@@ -15,9 +16,12 @@ compile:
 	avr-size --format=avr --mcu=$(DEVICE) $(FILENAME).elf
 
 upload:
-	avrdude -v -p $(DEVICE) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -U flash:w:$(FILENAME).hex:i
+	avrdude -v -p $(DEVICE) -c $(PROGRAMMER) -P $(PORT)  -C $(AVRDUDE_CONF) -b $(BAUD) -U flash:w:$(FILENAME).hex:i
 
 clean:
 	rm $(FILENAME).o
 	rm $(FILENAME).elf
 	rm $(FILENAME).hex
+
+
+
